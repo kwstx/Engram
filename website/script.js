@@ -1,4 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // HAMBURGER MENU LOGIC
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+
     const faqItems = document.querySelectorAll('.faq-item');
 
     faqItems.forEach(item => {

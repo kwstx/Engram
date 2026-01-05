@@ -27,26 +27,28 @@
         "title": "Hello World"
       },
       {
-        "command": "engram.search",
-        "title": "Engram: Find Similar Patterns"
-      },
-      {
         "command": "engram.excludeFile",
         "title": "Engram: Exclude this File"
-      },
-      {
-        "command": "engram.deleteMemory",
-        "title": "Engram: Delete Memory"
-      },
-      {
-        "command": "engram.forgetAiContext",
-        "title": "Engram: Forget AI Context for This File"
-      },
-      {
-        "command": "engram.toggleAiContext",
-        "title": "Engram: Toggle AI Context Capture (Enable/Disable)"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "engram-sidebar",
+          "title": "Engram",
+          "icon": "images/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "engram-sidebar": [
+        {
+          "type": "webview",
+          "id": "engram.promptTimeline",
+          "name": "Prompt Timeline"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -57,21 +59,23 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.96.0",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/vscode": "^1.96.0",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
+    "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.17.0",
     "glob": "^8.1.0",
     "mocha": "^11.0.1",
-    "typescript": "^5.7.2",
-    "@vscode/test-electron": "^2.4.1"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@types/diff": "^7.0.2",
+    "@xenova/transformers": "^2.14.0",
+    "diff": "^8.0.2",
     "uuid": "^11.0.4",
-    "vectordb": "^0.4.5",
-    "@xenova/transformers": "^2.14.0"
+    "vectordb": "^0.4.5"
   }
 }

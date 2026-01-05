@@ -19,6 +19,7 @@ export class VectorStore {
     private table: any = null;
     private clusterTable: any = null;
     private failureTable: any = null;
+    private vibeTable: any = null;
 
     constructor() {
         this.dbPath = path.join(os.homedir(), '.gemini', 'antigravity', 'pattern-vault', 'data');
@@ -101,8 +102,54 @@ export class VectorStore {
                 this.failureTable = await this.db.openTable('failures');
             }
 
+
+            // VIBE PROMPTS TABLE (Step 10)
+            if (!tableNames.includes('vibe_prompts')) {
+                this.vibeTable = await this.db.createTable('vibe_prompts', [{
+                    vector: Array(384).fill(0), // default for all-MiniLM-L6-v2 is 384 dims
+                    id: 'init',
+                    content: '',
+                    sessionId: '',
+                    status: '', // 'success', 'failed', 'unknown'
+                    timestamp: ''
+                }]);
+                await this.vibeTable.delete('id = "init"');
+            } else {
+                this.vibeTable = await this.db.openTable('vibe_prompts');
+            }
+
         } catch (e) {
             console.error('Failed to init vector store:', e);
+        }
+    }
+
+    // --- Vibe Prompts Methods ---
+
+    async saveVibePrompt(embedding: number[], metadata: { id: string, content: string, sessionId: string, status: string }) {
+        if (!this.db || !this.vibeTable) await this.init();
+        if (!this.vibeTable) return;
+
+        await this.vibeTable.add([{
+            vector: embedding,
+            id: metadata.id,
+            content: metadata.content,
+            sessionId: metadata.sessionId,
+            status: metadata.status,
+            timestamp: new Date().toISOString()
+        }]);
+    }
+
+    async searchVibePrompts(queryVector: number[], limit: number = 5): Promise<any[]> {
+        if (!this.db || !this.vibeTable) await this.init();
+        if (!this.vibeTable) return [];
+
+        try {
+            return await this.vibeTable.search(queryVector)
+                .limit(limit)
+                .execute();
+        } catch (e) {
+            console.error("Error searching vibe prompts:", e);
+            return [];
         }
     }
 

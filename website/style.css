@@ -1,3 +1,7 @@
+.hamburger {
+    display: none;
+}
+
 :root {
     --bg-color: #ffffff;
     --text-primary: #1a1a1a;
@@ -455,26 +459,129 @@ h1 {
 
 @media (max-width: 768px) {
 
+    /* PAGE FRAME MOBILE */
+    .page-frame {
+        margin: 0;
+        border-radius: 0 0 30px 30px;
+        min-height: 100vh;
+        border: none;
+    }
+
+    .page-frame::before {
+        border-radius: 0 0 30px 30px;
+    }
+
+    /* NAVIGATION */
+    /* NAVIGATION */
     /* NAVIGATION */
     nav {
         padding: 1.5rem 5%;
-        flex-direction: column;
-        gap: 1.5rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
         position: relative;
-        /* Switch to relative to avoid overlap issues on small screens */
         transform: none;
         left: 0;
+        background: transparent !important;
+        /* Ensure clear */
+        margin-top: 0;
+        z-index: 1000;
+        /* Ensure Nav container is above EVERYTHING */
     }
 
     .logo-group {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
+        z-index: 101;
+        /* Above menu (z-100) */
     }
 
-    .nav-links {
-        gap: 1.2rem;
-        flex-wrap: wrap;
-        justify-content: center;
+    /* HAMBURGER ICON */
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 20px;
+        cursor: pointer;
+        z-index: 101;
     }
+
+    .hamburger span {
+        display: block;
+        width: 100%;
+        height: 2px;
+        background: #1a1a1a;
+        transition: all 0.3s ease;
+    }
+
+    /* Anime to X */
+    .hamburger.active span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* NAV LINKS DROP DOWN - FULL SCREEN OVERLAY */
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+
+        background: #ffffff;
+
+
+        /* Reset box model stuff */
+        padding: 0;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+
+        /* Animation - Slide from Top */
+        opacity: 0;
+        visibility: hidden;
+        /* Hide from clicks when up */
+        transform: translateY(-100%);
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+        z-index: 100;
+        /* Increased to cover everything including features-grid (z-50) */
+    }
+
+    .nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .nav-links a {
+        font-size: 1.5rem;
+        /* Larger text for full screen menu */
+        font-weight: 500;
+        color: #1a1a1a;
+        padding: 0.5rem;
+    }
+
+    .btn-nav-outline {
+        margin-top: 1rem;
+        transform: scale(1.1);
+    }
+
 
     /* HERO */
     #hero {
@@ -489,6 +596,11 @@ h1 {
         font-size: 3rem;
         letter-spacing: -1.5px;
         margin-bottom: 1.5rem;
+        padding: 0 1rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
         padding: 0 1rem;
     }
 
