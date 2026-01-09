@@ -41,32 +41,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Drag to Scroll Logic for Products Grid
     const slider = document.querySelector('.products-grid');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
+    if (slider) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
 
-    slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        slider.classList.add('active'); // Change cursor
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.classList.add('active'); // Change cursor
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
 
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
-        slider.classList.remove('active');
-    });
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
 
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.classList.remove('active');
-    });
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.classList.remove('active');
+        });
 
-    slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault(); // Stop selection of text
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 2; // Scroll-fast multiplier
-        slider.scrollLeft = scrollLeft - walk;
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault(); // Stop selection of text
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll-fast multiplier
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    }
+    // Feature Card Interaction
+    const cards = document.querySelectorAll('.feature-card');
+    console.log('Found feature cards:', cards.length);
+
+    cards.forEach(card => {
+        card.addEventListener('click', function () {
+            console.log('Card clicked!');
+            // Remove active from all
+            cards.forEach(c => c.classList.remove('active'));
+            // Add active to THIS card
+            this.classList.add('active');
+        });
     });
 });

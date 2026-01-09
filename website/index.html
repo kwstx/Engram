@@ -9,9 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Akshar:wght@300..700&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=23">
+    <link rel="stylesheet" href="style.css?v=114">
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </head>
@@ -39,7 +39,7 @@
             <div class="nav-actions">
 
                 <a href="https://marketplace.visualstudio.com/items?itemName=use-engram.engram"
-                    class="btn-black-nav">Get Started</a>
+                    class="btn-black-nav">Download Now</a>
             </div>
         </nav>
 
@@ -54,7 +54,7 @@
 
             <div class="cta-container">
                 <a href="https://marketplace.visualstudio.com/items?itemName=use-engram.engram" class="btn-black">
-                    Get Started
+                    Download Now
                 </a>
                 <a href="#" class="btn-outline-hero">
                     Book a Demo
@@ -64,254 +64,111 @@
             <!-- Dashboard Image Placeholder -->
             <div class="dashboard-placeholder">
                 <div class="dashboard-mockup">
-                    <!-- Image removed per request -->
+                    <div class="game-header">Kill The Bugs</div>
+                    <div id="game-score">SCORE: 0</div>
+                    <div class="game-controls">
+                        <ion-icon name="arrow-back-outline"></ion-icon>
+                        <ion-icon name="arrow-forward-outline"></ion-icon>
+                        <span class="key-space">SPACE</span>
+                    </div>
+                    <canvas id="hero-game-canvas" width="1200" height="550"></canvas>
                 </div>
             </div>
 
 
 
-            <!-- NEW FEATURE SECTION -->
-            <section id="intelligence">
-                <div class="split-section">
-                    <div class="feature-visual">
-                        <img src="feature_simple_cards.png" alt="Code Memory Simple Cards">
+            <!-- Intelligence Section removed -->
+
+            <!-- Content removed as per user request -->
+
+            <!-- Footer removed as per user request -->
+        </main>
+
+        <!-- Feature Split Section -->
+        <div class="feature-split-container">
+            <h2>Build Software That Remembers</h2>
+            <div class="feature-split-grid">
+                <!-- Left Card (Active by default) -->
+                <div class="feature-card active">
+                    <h3>Code confidently with an IDE memory.</h3>
+                    <p>Engram remembers past fixes, detects recurring mistakes, and warns you before repeating errors.
+                    </p>
+
+                </div>
+                <!-- Right Card -->
+                <div class="feature-card">
+                    <h3>Make specific in-line warnings and recall fixes with Engram IDE</h3>
+                    <p>Apply fixes or detect mistakes using historical context from your codebase for earlier warnings
+                        and safer reuse with Engram IDE, a privacy-first extension powered locally entirely.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expert Section -->
+        <div class="expert-section-container">
+            <h2>Engram Gives Your IDE Memory</h2>
+            <div class="expert-card">
+                <div class="expert-content">
+                    <h3>Engram Memory</h3>
+                    <p>Most developers fix bugs repeatedly because context fades, patterns hide, and tools never
+                        remember lessons over time.<br><br>
+
+                        Engram automatically detects recurring mistakes and connects current code to historical fixes
+                        across projects locally.<br><br>
+
+                        Simply code normally while Engram remembers fixes, warns earlier, and replays solutions
+                        instantly locally.
+                    </p>
+                </div>
+                <div class="expert-visuals">
+                    <!-- Bars -->
+                    <div class="model-bar bar-pear">
+                        <span>PearAI Model <span class="score">94.10</span></span>
                     </div>
-                    <div class="feature-text">
-                        <h2>Intelligence tools <br> Allowing to bring <br> Local AI into Code</h2>
-                        <p>Available on Windows, macOS, and Linux. Compatible with all modern VS Code versions.</p>
-                        <a href="intelligence.html" class="btn-pill-white">
-                            Read more
-                            <ion-icon name="arrow-forward-outline"></ion-icon>
-                        </a>
+                    <div class="model-bar bar-gpt">
+                        <span>GPT-4o <span class="score">80.53</span></span>
+                    </div>
+                    <div class="model-bar bar-llama">
+                        <span>Meta Llama 3.1 405b <span class="score">80.43</span></span>
+                    </div>
+                    <div class="model-bar bar-claude">
+                        <span>Claude 3 Opus <span class="score">76.74</span></span>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- OUR PRODUCTS SECTION -->
-            <!-- OUR PRODUCTS SECTION -->
-            <section id="products">
-                <div class="products-header">
-                    <h2>Core <br> capabilities</h2>
-                    <p class="products-subtitle">Available for Visual Studio Code.</p>
-                </div>
+            <!-- Creator & Agent Grid -->
+            <div class="creator-agent-container">
+                <div class="creator-agent-grid">
+                    <!-- Recall Card -->
+                    <div class="creator-card">
+                        <div class="card-header-row">
+                            <h3>Engram Recall</h3>
+                            <span class="powered-by">Powered by local IDE memory engine</span>
+                        </div>
+                        <div class="coming-soon">Available Now</div>
+                        <p>Recalls past fixes and mistake patterns ensuring your code avoids repeated errors across
+                            files and projects</p>
 
-                <div class="products-grid">
-                    <!-- Card 1: Prompt Tracker (Phase 1) -->
-                    <div class="product-card">
-                        <div class="product-icon-container">
-                            <ion-icon name="time-outline"></ion-icon>
-                        </div>
-                        <div>
-                            <h3>Prompt Tracker</h3>
-                            <p>Visualize your thought process. Track, version, and recall every prompt iteration.</p>
-                        </div>
-                        <a href="context-memory.html" class="product-card-footer" style="text-decoration: none;">
-                            <span>Read more</span>
-                            <ion-icon name="arrow-up-forward-outline"></ion-icon>
-                        </a>
+
                     </div>
 
-                    <!-- Card 2: Mistake Fingerprinting (Phase 2) -->
-                    <div class="product-card">
-                        <div class="product-icon-container">
-                            <ion-icon name="warning-outline"></ion-icon>
+                    <!-- Replay Card -->
+                    <div class="agent-card">
+                        <div class="card-header-row">
+                            <h3>Engram Replay</h3>
+                            <span class="powered-by">Powered by local IDE memory engine</span>
                         </div>
-                        <div>
-                            <h3>Mistake Shield</h3>
-                            <p>Fingerprint your errors. Get warned before you make the same mistake twice.</p>
-                        </div>
-                        <a href="failure-aware.html" class="product-card-footer" style="text-decoration: none;">
-                            <span>Read more</span>
-                            <ion-icon name="arrow-up-forward-outline"></ion-icon>
-                        </a>
-                    </div>
+                        <p>Replays how you fixed similar mistakes using diffs and contextual history</p>
 
-                    <!-- Card 3: Reuse Suggestions (Phase 3) -->
-                    <div class="product-card">
-                        <div class="product-icon-container">
-                            <ion-icon name="copy-outline"></ion-icon>
-                        </div>
-                        <div>
-                            <h3>Smart Recall</h3>
-                            <p>Cross-tool memory. Automatically link pasted code back to its original prompt.</p>
-                        </div>
-                        <a href="pattern-vault.html" class="product-card-footer" style="text-decoration: none;">
-                            <span>Read more</span>
-                            <ion-icon name="arrow-up-forward-outline"></ion-icon>
-                        </a>
-                    </div>
 
-                    <!-- Card 4: Security Vibe Checker (Phase 4) -->
-                    <div class="product-card">
-                        <div class="product-icon-container">
-                            <ion-icon name="shield-checkmark-outline"></ion-icon>
-                        </div>
-                        <div>
-                            <h3>Security Vibe Check</h3>
-                            <p>Real-time scanning. Catch secrets and risky patterns (eval, SQL) before they run.</p>
-                        </div>
-                        <a href="local-privacy.html" class="product-card-footer" style="text-decoration: none;">
-                            <span>Read more</span>
-                            <ion-icon name="arrow-up-forward-outline"></ion-icon>
-                        </a>
-                    </div>
-
-                    <!-- Card 5: Local Privacy (Core) -->
-                    <div class="product-card">
-                        <div class="product-icon-container">
-                            <ion-icon name="lock-closed-outline"></ion-icon>
-                        </div>
-                        <div>
-                            <h3>Local Privacy</h3>
-                            <p>100% local processing. Your code and vibes never leave your machine.</p>
-                        </div>
-                        <a href="local-privacy.html" class="product-card-footer" style="text-decoration: none;">
-                            <span>Read more</span>
-                            <ion-icon name="arrow-up-forward-outline"></ion-icon>
-                        </a>
                     </div>
                 </div>
-            </section>
-
-            <!-- FAQ SECTION -->
-            <section id="faq">
-                <div class="faq-badge">FAQS</div>
-                <h2>Have any question</h2>
-
-                <div class="faq-container">
-                    <!-- Question 1 -->
-                    <div class="faq-item">
-                        <div class="faq-header">
-                            <h4>What is Engram?</h4>
-                            <span class="icon-plus">+</span>
-                        </div>
-                        <div class="faq-body">
-                            <p>Engram is a local-first extension that creates a semantic index of your codebase,
-                                allowing for instant context retrieval and smart queries without data leaving your
-                                machine.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Question 2 -->
-                    <div class="faq-item">
-                        <div class="faq-header">
-                            <h4>How does this help vibecoders?</h4>
-                            <span class="icon-plus">+</span>
-                        </div>
-                        <div class="faq-body">
-                            <p>Vibecoding is all about flow. Engram keeps you in the zone by automatically surfacing
-                                the right context and patterns, so you never have to break your rhythm to search for
-                                docs or
-                                implementation details.</p>
-                        </div>
-                    </div>
-
-                    <!-- Question 3 -->
-                    <div class="faq-item">
-                        <div class="faq-header">
-                            <h4>What are the benefits of Engram?</h4>
-                            <span class="icon-plus">+</span>
-                        </div>
-                        <div class="faq-body">
-                            <p>It enhances productivity by establishing deep context awareness in your editor, reducing
-                                time
-                                spent searching for logic or references manually.</p>
-                        </div>
-                    </div>
-
-                    <!-- Question 4 -->
-                    <div class="faq-item">
-                        <div class="faq-header">
-                            <h4>Is my code processed in the cloud?</h4>
-                            <span class="icon-plus">+</span>
-                        </div>
-                        <div class="faq-body">
-                            <p>No. We prioritize privacy. All embedding generation and vector search operations happen
-                                100%
-                                locally on your device.</p>
-                        </div>
-                    </div>
-
-                    <!-- Question 4 -->
-                    <div class="faq-item">
-                        <div class="faq-header">
-                            <h4>Which editors are supported?</h4>
-                            <span class="icon-plus">+</span>
-                        </div>
-                        <div class="faq-body">
-                            <p>Currently, Engram is optimized for Visual Studio Code, with support for JetBrains IDEs
-                                coming soon.</p>
-                        </div>
-                    </div>
-
-                    <!-- Question 5 -->
-                    <div class="faq-item">
-                        <div class="faq-header">
-                            <h4>Is it free to use?</h4>
-                            <span class="icon-plus">+</span>
-                        </div>
-                        <div class="faq-body">
-                            <p>Yes, the core local extension is free to use for individual developers.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FOOTER -->
-            <footer>
-                <div class="footer-content">
-                    <div class="footer-brand">
-                        <div class="logo-group">
-                            <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 40">
-                                <g style="opacity: 1;" id="logogram" transform="translate(0, 0) rotate(0)">
-                                    <path
-                                        d="M43 31L31 40H5L7 35L12 31H29L32 35L40 11L45 7H50L43 31ZM43 5L38 9H21L18 5L10 29L5 33H0L7 9L19 0H45L43 5ZM24 13H35L29 31L26 27H15L21 9L24 13Z"
-                                        fill="#000000"></path>
-                                </g>
-                            </svg>
-                            <span>engram</span>
-                        </div>
-                        <p>The gateway to code memory. <br> Local first, privacy always.</p>
-                    </div>
-
-                    <div class="footer-links">
-                        <div class="link-column">
-                            <h4>Product</h4>
-                            <a href="#products">Features</a>
-                            <a href="integrations.html">Integrations</a>
-                            <a href="#faq">FAQ</a>
-                            <a href="download.html">Download</a>
-                        </div>
-                        <div class="link-column">
-                            <h4>Resources</h4>
-                            <a href="docs.html">Documentation</a>
-                            <a href="api-reference.html">API Reference</a>
-                            <a href="roadmap.html">Roadmap</a>
-                            <a href="changelog.html">Changelog</a>
-                        </div>
-                        <div class="link-column">
-                            <h4>Company</h4>
-                            <a href="about.html">About</a>
-                            <a href="contact.html">Contact</a>
-                            <a href="privacy.html">Privacy</a>
-                            <a href="terms.html">Terms</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="footer-bottom">
-                    <p>&copy; 2026 Engram Project.</p>
-                    <div class="social-icons">
-                        <a href="github.html" title="GitHub"><ion-icon name="logo-github"></ion-icon></a>
-                        <a href="roadmap.html" title="Roadmap"><ion-icon name="map-outline"></ion-icon></a>
-                        <a href="changelog.html" title="Changelog"><ion-icon name="time-outline"></ion-icon></a>
-                    </div>
-                </div>
-            </footer>
-    </div>
-    <script src="script.js"></script>
-    <!-- Last Updated: 2026-01-06 Final Deployment Trigger -->
+            </div>
+        </div>
+        <script src="script.js?v=3"></script>
+        <script src="hero-game.js?v=33"></script>
+        <!-- Last Updated: 2026-01-06 Final Deployment Trigger -->
 </body>
 
 </html>
