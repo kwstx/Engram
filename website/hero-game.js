@@ -93,6 +93,41 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === ' ' || e.code === 'Space') spacePressed = false;
     });
 
+    // Touch Input Handling (Mobile)
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Prevent scrolling
+        fireBullet();
+
+        // Optional: Also move ship to touch position on start
+        const rect = canvas.getBoundingClientRect();
+        /*
+          Use logical X coordinate relative to the 1200px width canvas. 
+          The visible canvas might be scaled down by CSS.
+          Scale factor = internal width (1200) / CSS width (rect.width)
+        */
+        const scaleX = canvas.width / rect.width;
+        const touchX = (e.touches[0].clientX - rect.left) * scaleX;
+
+        // Center ship on finger
+        ship.x = touchX - ship.width / 2;
+
+        // Boundary checks
+        if (ship.x < 0) ship.x = 0;
+        if (ship.x > canvas.width - ship.width) ship.x = canvas.width - ship.width;
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault(); // Prevent scrolling
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const touchX = (e.touches[0].clientX - rect.left) * scaleX;
+
+        ship.x = touchX - ship.width / 2;
+
+        if (ship.x < 0) ship.x = 0;
+        if (ship.x > canvas.width - ship.width) ship.x = canvas.width - ship.width;
+    }, { passive: false });
+
     function fireBullet() {
         bullets.push({
             x: ship.x + ship.width / 2 - 2,
