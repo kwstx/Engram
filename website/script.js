@@ -95,15 +95,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (navPrev && navNext && slide1 && slide2) {
         let isAnimating = false;
+        // Initialize state based on initial visibility
+        // If JS loads late, slide 2 might be hidden via CSS. Assume slide 1 is active.
+        let activeSlide = 1;
 
-        const toggleSlides = () => {
+        const toggleSlides = (direction) => {
             if (isAnimating) return;
+
+            console.log('State before toggle:', { activeSlide, direction });
+
+            let shouldSwitch = false;
+
+            // Strict Logic:
+            // Next (Right Arrow) -> Only valid if Active Slide is 1 (Switch to 2)
+            // Prev (Left Arrow) -> Only valid if Active Slide is 2 (Switch to 1)
+
+            if (direction === 'next' && activeSlide === 1) {
+                shouldSwitch = true;
+            } else if (direction === 'prev' && activeSlide === 2) {
+                shouldSwitch = true;
+            }
+
+            if (!shouldSwitch) {
+                console.log('Navigation ignored: already on requested side');
+                return;
+            }
+
             isAnimating = true;
 
-            console.log('Toggling slides with animation');
+            const currentSlide = activeSlide === 1 ? slide1 : slide2;
+            const nextSlide = activeSlide === 1 ? slide2 : slide1;
 
-            const currentSlide = slide1.style.display !== 'none' ? slide1 : slide2;
-            const nextSlide = currentSlide === slide1 ? slide2 : slide1;
+            // Update state immediately to reflect target state
+            activeSlide = activeSlide === 1 ? 2 : 1;
+
+            console.log(`Executing Switch to Slide ${activeSlide}`);
 
             // 1. Animate Out
             currentSlide.classList.add('animate-out');
@@ -113,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentSlide.style.display = 'none';
 
                 // 2. Prepare Next Slide
-                nextSlide.style.display = 'grid';
+                nextSlide.style.display = 'grid'; // Ensure grid
                 nextSlide.classList.add('animate-in');
 
                 nextSlide.addEventListener('animationend', () => {
@@ -124,8 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }, { once: true });
         };
 
-        navPrev.addEventListener('click', toggleSlides);
-        navNext.addEventListener('click', toggleSlides);
+        navPrev.addEventListener('click', () => toggleSlides('prev'));
+        navNext.addEventListener('click', () => toggleSlides('next'));
     } else {
         console.error('Navigation elements not found!');
     }

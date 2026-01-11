@@ -3,99 +3,115 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Features - Engram</title>
+    <!-- Google Fonts: Inter & Newsreader (Serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Akshar:wght@300..700&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=181">
+    <link rel="stylesheet" href="style.css?v=187">
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </head>
 
 <body>
-    <!-- Nav -->
-    <nav>
-        <a href="index.html" class="logo-group">
-            <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 40">
-                <g style="opacity: 1;" id="logogram" transform="translate(0, 0) rotate(0)">
-                    <path
-                        d="M43 31L31 40H5L7 35L12 31H29L32 35L40 11L45 7H50L43 31ZM43 5L38 9H21L18 5L10 29L5 33H0L7 9L19 0H45L43 5ZM24 13H35L29 31L26 27H15L21 9L24 13Z"
-                        fill="#000000"></path>
-                </g>
-            </svg>
-            <span>engram</span>
-        </a>
+    <div class="page-frame">
+        <nav>
+            <a href="index.html" class="logo-group">
+                <svg class="logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 40">
+                    <g style="opacity: 1;" id="logogram" transform="translate(0, 0) rotate(0)">
+                        <path
+                            d="M43 31L31 40H5L7 35L12 31H29L32 35L40 11L45 7H50L43 31ZM43 5L38 9H21L18 5L10 29L5 33H0L7 9L19 0H45L43 5ZM24 13H35L29 31L26 27H15L21 9L24 13Z"
+                            fill="#000000"></path>
+                    </g>
+                </svg>
+                <span>engram</span>
+            </a>
 
-        <div class="nav-center">
-            <a href="features.html">Features</a>
-            <a href="privacy.html">Privacy</a>
-            <a href="docs.html">Docs</a>
-        </div>
-
-        <div class="nav-actions">
-            <a href="https://marketplace.visualstudio.com/items?itemName=use-engram.engram"
-                class="btn-black-nav">Download Now</a>
-        </div>
-    </nav>
-
-    <main style="padding-top: 6rem; max-width: 800px; margin: 0 auto; padding-left: 20px; padding-right: 20px;">
-        <h1 style="text-align: center; margin-bottom: 2rem;">Features</h1>
-        <p class="subtitle" style="text-align: center; margin-bottom: 4rem;">
-            Discover how Engram transforms your local development workflow with privacy-first AI.
-        </p>
-
-        <div style="margin-bottom: 4rem;">
-            <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; font-family: 'Inter', sans-serif;">Core Capabilities
-            </h3>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                    <strong style="display: block; font-size: 1.2rem; margin-bottom: 0.5rem;">
-                        <span style="color: #1a1a1a;">Engram Memory</span>
-                    </strong>
-                    <p style="color: var(--text-secondary); line-height: 1.6;">Automatically detects recurring mistakes
-                        and connects current code to historical fixes across projects locally.</p>
-                </li>
-                <li style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                    <strong style="display: block; font-size: 1.2rem; margin-bottom: 0.5rem;">
-                        <span style="color: #1a1a1a;">Engram Recall</span>
-                    </strong>
-                    <p style="color: var(--text-secondary); line-height: 1.6;">Recalls past fixes and mistake patterns
-                        ensuring your code avoids repeated errors across files and projects.</p>
-                </li>
-                <li style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                    <strong style="display: block; font-size: 1.2rem; margin-bottom: 0.5rem;">
-                        <span style="color: #1a1a1a;">Engram Replay</span>
-                    </strong>
-                    <p style="color: var(--text-secondary); line-height: 1.6;">Replays how you fixed similar mistakes
-                        using diffs and contextual history, so you stop guessing.</p>
-                </li>
-                <li style="margin-bottom: 2rem; padding-bottom: 2rem;">
-                    <strong style="display: block; font-size: 1.2rem; margin-bottom: 0.5rem;">
-                        <span style="color: #1a1a1a;">Privacy First</span>
-                    </strong>
-                    <p style="color: var(--text-secondary); line-height: 1.6;">Powered by a local IDE memory engine. All
-                        analysis happens on your machine—no code leaves your network.</p>
-                </li>
-            </ul>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-left">
-                <span class="footer-logo">engram</span>
-                <span class="copyright">© 2026 Engram Inc.</span>
+            <!-- Hamburger Icon -->
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-            <div class="footer-links">
+
+            <div class="nav-center nav-links">
+                <a href="features.html" class="active">Features</a>
                 <a href="privacy.html">Privacy</a>
-                <a href="terms.html">Terms</a>
-                <a href="https://twitter.com/use_engram">Twitter</a>
-                <a href="https://github.com/kwstx/Engram">GitHub</a>
+                <a href="docs.html">Docs</a>
             </div>
-        </div>
-    </footer>
+
+            <div class="nav-actions">
+                <a href="https://marketplace.visualstudio.com/items?itemName=use-engram.engram"
+                    class="btn-black-nav">Download Now</a>
+            </div>
+        </nav>
+
+        <section class="legal-content">
+            <h1>Features</h1>
+            <p class="intro">Discover how Engram transforms your local development workflow with privacy-first AI that
+                remembers your code.</p>
+
+            <div class="policy-section">
+                <h3>Engram Memory</h3>
+                <p>Most developers fix the same bugs repeatedly because context fades and tools forget. Engram Memory
+                    changes that by automatically detecting recurring mistakes and connecting current code to historical
+                    fixes across your projects locally. It builds a semantic understanding of your unique coding
+                    patterns, ensuring that the lessons you learn once are never lost.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3>Engram Recall</h3>
+                <p>Stop digging through commit history to find that one fix from six months ago. Engram Recall
+                    proactively surfaces past solutions and mistake patterns while you code. It warns you before you
+                    repeat an error and provides the exact context you need to solve complex problems faster, based on
+                    your own proven solutions.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3>Engram Replay</h3>
+                <p>Guessing how you solved a problem is a waste of time. Engram Replay shows you exactly how you fixed
+                    similar bugs in the past with detailed diffs and contextual history. See the evolution of your code
+                    fixes side-by-side, allowing you to reuse logic without blindly copying potential regressions.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3>Security Vibe Check</h3>
+                <p>Don't let risky code slip into production. Engram performs real-time scanning to catch secrets and
+                    dangerous patterns (like <code>eval</code>) before they run. It's context-aware, intelligently
+                    ignoring false positives in comments, and allows for informed overrides so you maintain control
+                    while staying secure.</p>
+            </div>
+
+            <div class="policy-section">
+                <h3>Privacy First By Design</h3>
+                <p><strong>100% Local Processing:</strong> All analysis happens locally on your machine. Your code, your
+                    patterns, and your memory never leave your network. We believe your intellectual property belongs to
+                    you.<br><br>
+                    <strong>No Cloud Dependencies:</strong> Engram works offline and doesn't rely on external APIs for
+                    its core memory features. Enjoy zero-latency intelligence that respects your security protocols.
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-left">
+                    <span class="footer-logo">engram</span>
+                    <span class="copyright">© 2026 Engram Inc.</span>
+                </div>
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy</a>
+                    <a href="terms.html">Terms</a>
+                    <a href="https://twitter.com/use_engram">Twitter</a>
+                    <a href="https://github.com/kwstx/Engram">GitHub</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 </body>
 
 </html>
