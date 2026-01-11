@@ -777,10 +777,16 @@ h1 {
     }
 
     .memory-brain-image,
-    .recall-star-image,
-    .replay-play-image {
+    .recall-star-image {
         width: 100%;
         height: auto;
+    }
+
+    .replay-play-image {
+        width: 85%;
+        height: auto;
+        display: block;
+        margin: -1.5rem auto 0 auto;
     }
 
     .creator-agent-grid {
