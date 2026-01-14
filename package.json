@@ -31,24 +31,6 @@
         "title": "Engram: Exclude this File"
       }
     ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "engram-sidebar",
-          "title": "Engram",
-          "icon": "images/icon.png"
-        }
-      ]
-    },
-    "views": {
-      "engram-sidebar": [
-        {
-          "type": "webview",
-          "id": "engram.promptTimeline",
-          "name": "Prompt Timeline"
-        }
-      ]
-    },
     "configuration": {
       "type": "object",
       "title": "Engram",

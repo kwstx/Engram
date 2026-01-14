@@ -1,13 +1,20 @@
 const assert = require('assert');
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 // --- MOCKS ---
 const vscode = {
     DiagnosticSeverity: { Error: 0, Warning: 1 },
     Diagnostic: class { constructor(range, message, severity) { this.range = range; this.message = message; this.severity = severity || 0; } },
     Range: class { constructor(sl, sc, el, ec) { this.start = { line: sl, character: sc }; this.end = { line: el, character: ec }; } },
-    EventEmitter: class { fire() { } event() { } },
+    EventEmitter: class {
+        constructor() { this.listeners = []; }
+        fire(e) { this.listeners.forEach(l => l(e)); }
+        event(listener) { this.listeners.push(listener); return { dispose: () => { } }; }
+    },
     workspace: {
+        workspaceFolders: [{ uri: { fsPath: './test_storage' } }],
         getConfiguration: () => ({
             get: (key, def) => {
                 if (key === 'sensitivity') return global.sensitivity || def;
@@ -15,156 +22,113 @@ const vscode = {
             }
         })
     },
-    Uri: { parse: (s) => ({ fsPath: s, toString: () => s }) }
+    Uri: { parse: (s) => ({ fsPath: s, toString: () => s }) },
+    ExtensionContext: class { },
+    window: {
+        showInformationMessage: (msg) => console.log(`[MOCK UI] Info: ${msg}`),
+        showWarningMessage: (msg) => console.log(`[MOCK UI] Warn: ${msg}`)
+    },
+    env: {
+        clipboard: {
+            text: "",
+            writeText: async (t) => { vscode.env.clipboard.text = t; }
+        }
+    }
 };
 
-// --- LOGIC UNDER TEST ---
-class MistakeDetector {
-    constructor() { this.fingerprints = new Map(); }
-    fingerprintError(diag) {
-        if (!diag || !diag.message) return { hash: 'invalid' };
-        const hash = crypto.createHash('sha256').update(diag.message).digest('hex');
-        return { hash };
-    }
-    processError(diag) {
-        const { hash } = this.fingerprintError(diag);
-        if (hash === 'invalid') return "IGNORED";
+// --- 2. Load Compiled Modules (Safe Require with Mock)
+const Module = require('module');
+const originalRequire = Module.prototype.require;
+Module.prototype.require = function (path) {
+    if (path === 'vscode') return vscode;
+    return originalRequire.apply(this, arguments);
+};
 
-        let fp = this.fingerprints.get(hash);
-        if (fp) {
-            fp.count++;
-            const config = vscode.workspace.getConfiguration('engram');
-            const sensitivity = config.get('sensitivity', 'breeze');
-            const threshold = sensitivity === 'strict' ? 1 : 2;
-
-            if (fp.count > threshold) return "WARNING_TRIGGERED";
-        } else {
-            fp = { id: hash, count: 1, fixes: [] };
-            this.fingerprints.set(hash, fp);
-        }
-        return "LOGGED";
-    }
-    addFix(hash, description, diff) {
-        const fp = this.fingerprints.get(hash);
-        if (fp) fp.fixes.push({ id: 'fix-1', description, diff });
-    }
-    getMemoryCard(diag) {
-        const { hash } = this.fingerprintError(diag);
-        const fp = this.fingerprints.get(hash);
-        if (!fp) return null;
-        let analysis;
-        if (fp.fixes && fp.fixes.length > 0) {
-            const f = fp.fixes[0];
-            analysis = `This resembles a previous change caused by **${f.description.split(' in ')[0]}**. \n\nYou previously resolved this by modifying ${f.diff.length} characters.`;
-        }
-        return { frequency: fp.count, analysis: analysis };
-    }
+let RuleManager, ContextInjector, MistakeDetector, SmartClipboard;
+try {
+    RuleManager = require('./out/ruleManager').RuleManager;
+    ContextInjector = require('./out/contextInjector').ContextInjector;
+    MistakeDetector = require('./out/mistakeDetector').MistakeDetector;
+    SmartClipboard = require('./out/smartClipboard').SmartClipboard;
+} catch (e) {
+    console.error("❌ Failed to load compiled modules. Did you run 'npm run compile'?", e);
+    process.exit(1);
 }
 
-class SecurityScanner {
-    scanText(text) {
-        const issues = [];
-        if (text.includes('AWS_ACCESS_KEY')) issues.push({ rule: { id: 'no-secrets', risk: 'Critical Security Risk' } });
-        if (text.includes('console.log')) issues.push({ rule: { id: 'no-console', risk: 'Low Severity' } });
-        return issues;
-    }
-}
-
-// --- TESTS ---
+// --- TEST SUITE ---
 async function runTests() {
-    console.log("Running Manual Verification Suite...");
-    const detector = new MistakeDetector();
-    const scanner = new SecurityScanner();
+    console.log("Running Universal AI Whisperer Verification...");
 
-    // 1. Confidence Control
-    console.log("[Test 1] Sensitivity");
-    global.sensitivity = 'breeze';
-    const diag = new vscode.Diagnostic({}, "Error A");
-    detector.processError(diag);
-    detector.processError(diag);
-    assert.strictEqual(detector.processError(diag), "WARNING_TRIGGERED"); // 3rd time
-    console.log("✔ Breeze mode verified");
+    // 1. Setup Mock Workspace
+    const testDir = './test_storage';
+    if (!fs.existsSync(testDir)) fs.mkdirSync(testDir);
 
-    global.sensitivity = 'strict';
-    const diagB = new vscode.Diagnostic({}, "Error B");
-    detector.processError(diagB);
-    assert.strictEqual(detector.processError(diagB), "WARNING_TRIGGERED"); // 2nd time
-    console.log("✔ Strict mode verified");
+    // 2. Test RuleManager (Base)
+    console.log("[Test 1] RuleManager Translation");
+    const rm = RuleManager.getInstance();
+    const mockFingerprints = [
+        { id: '1', count: 5, pattern: 'ts:2322:Type mismatch', ignored: false }
+    ];
+    const rules = rm.generateRules(mockFingerprints);
+    assert.ok(rules.includes("Type mismatch"));
+    console.log("✔ RuleManager verified");
 
-    // 2. AI Analysis
-    console.log("[Test 2] AI Analysis");
-    const hashA = detector.fingerprintError(diag).hash; // Get hash for Error A
-    detector.addFix(hashA, "Fixed typo in variable", "diff");
-    const card = detector.getMemoryCard(diag);
-    assert.ok(card.analysis && card.analysis.includes("Fixed typo"), "Analysis string missing/incorrect");
-    console.log("✔ AI Analysis verified");
+    // 3. Test Universal Context Injector
+    console.log("[Test 2] Universal File Injection");
+    const injector = ContextInjector.getInstance();
 
-    // 3. Security Filtering
-    console.log("[Test 3] Security Filtering");
-    const mixedCode = "AWS_ACCESS_KEY='123'; console.log('debug');";
-    const issues = scanner.scanText(mixedCode);
+    // Targets
+    const copilotPath = path.join(testDir, '.github', 'copilot-instructions.md');
+    const universalPath = path.join(testDir, 'engram_context.md');
 
-    // Simulate Breeze Filter
-    global.sensitivity = 'breeze';
-    const filtered = issues.filter(i => {
-        if (global.sensitivity === 'breeze') return i.rule.risk.includes('Critical');
-        return true;
-    });
+    // Clean start
+    if (fs.existsSync(path.dirname(copilotPath))) fs.rmSync(path.dirname(copilotPath), { recursive: true, force: true });
+    if (fs.existsSync(universalPath)) fs.unlinkSync(universalPath);
 
-    assert.strictEqual(filtered.length, 1, "Should filter out console.log");
-    assert.strictEqual(filtered[0].rule.id, 'no-secrets');
-    console.log("✔ Security filtering verified");
+    await injector.updateCursorRules(mockFingerprints);
 
-    // 4. Robustness
-    console.log("[Test 4] Robustness");
-    detector.processError(new vscode.Diagnostic({}, "")); // Empty
-    detector.processError(null); // Null
-    console.log("✔ Handled edge cases");
+    assert.ok(fs.existsSync(copilotPath), "Copilot instructions created");
+    assert.ok(fs.existsSync(universalPath), "Universal context created");
 
-    const mixedIssues = scanner.scanText("AWS_ACCESS_KEY='x'; console.log('x')");
-    assert.strictEqual(mixedIssues.length, 2);
-    console.log("✔ Mixed content verified");
+    const copilotContent = fs.readFileSync(copilotPath, 'utf8');
+    assert.ok(copilotContent.includes("ENGRAM AUTO-GENERATED"), "Copilot content injected");
+    console.log("   [Files] .github/copilot-instructions.md: content verified ✅");
 
-    // 5. Hardening (Phase 9)
-    console.log("[Test 5] Hardening Checks");
+    const universalContent = fs.readFileSync(universalPath, 'utf8');
+    assert.ok(universalContent.includes("ENGRAM AUTO-GENERATED"), "Universal content injected");
+    console.log("   [Files] engram_context.md: content verified ✅");
 
-    // 5a. False Positives (Strings/Comments)
-    // Note: Our mock scanner here needs to implement the stripping logic to pass this test if we run it locally.
-    // Since we only updated the TS source, this JS verification script won't actually fail unless we update the mock logic to match.
-    // However, for the user verification, I should copy the stripping logic here to prove it works conceptually.
+    console.log("   Preview of engram_context.md:\n" + universalContent.split('\n').slice(0, 5).map(l => '   > ' + l).join('\n'));
+    console.log("✔ Universal File Injection verified");
 
-    console.log("-> Testing Strip Logic (Mock)");
-    const stripCommentsAndStrings = (text) => {
-        return text.replace(/("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|`(?:\\[\s\S]|[^`\\])*`|\/\/[^\n]*|\/\*[\s\S]*?\*\/)/g, (match) => {
-            return match.replace(/[^\n]/g, ' ');
-        });
+    // 4. Test Smart Clipboard
+    console.log("[Test 3] Smart Clipboard");
+    const clipboard = SmartClipboard.getInstance();
+
+    // Mock Editor
+    const mockEditor = {
+        selection: {},
+        document: { getText: () => "const dangerous = true;" }
     };
 
-    const safeCode = `
-        // AWS_ACCESS_KEY
-        var s = "console.log";
-    `;
-    const stripped = stripCommentsAndStrings(safeCode);
-    const issuesMock = scanner.scanText(stripped);
-    assert.strictEqual(issuesMock.length, 0, "Should ignore keys in comments and console.log in strings");
-    console.log("✔ False Positives eliminated (Mock)");
-
-    // 5b. Eviction
-    console.log("-> Testing Eviction (Mock)");
-    // Simulate eviction 
+    // Need to populate MistakeDetector with mock fingerprints for the global search
+    const detector = MistakeDetector.getInstance();
+    // Reset private map via 'any' access
     const map = new Map();
-    const MAX = 50; // Use small limit for test
-    for (let i = 0; i < MAX + 10; i++) map.set(i, { id: i, lastSeen: Date.now() + i });
+    map.set('1', mockFingerprints[0]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Object.defineProperty(detector, 'fingerprints', { value: map });
 
-    if (map.size > MAX) {
-        const sorted = Array.from(map.values()).sort((a, b) => a.lastSeen - b.lastSeen);
-        const toRemove = sorted.slice(0, map.size - MAX);
-        toRemove.forEach(f => map.delete(f.id));
-    }
-    assert.strictEqual(map.size, MAX, "Should evict down to limit");
-    console.log("✔ Eviction logic verified");
+    await clipboard.copy(mockEditor);
 
-    console.log("\nALL SYSTEMS HARDENED 🛡️");
+    const clipboardText = vscode.env.clipboard.text;
+    console.log("   Clipboard Content Preview:\n" + clipboardText.substring(0, 100) + "...");
+
+    assert.ok(clipboardText.includes("<user_code>"), "Clipboard wrapped code");
+    assert.ok(clipboardText.includes("Type mismatch"), "Clipboard included rules");
+    console.log("✔ Smart Clipboard verified");
+
+    console.log("\nALL SYSTEMS (Universal AI) READY 🚀");
 }
 
 runTests().catch(e => { console.error(e); process.exit(1); });

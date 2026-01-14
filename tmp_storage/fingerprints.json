@@ -1,0 +1,11 @@
+[
+  {
+    "id": "9a175e7b2f4961912d606f58a43db1a76e97c5575161759ab69bd9f9a3543513",
+    "language": "unknown",
+    "detectionMethod": "diagnostic",
+    "pattern": "::Real Error Message",
+    "count": 3,
+    "lastSeen": 1768398014247,
+    "fixes": []
+  }
+]

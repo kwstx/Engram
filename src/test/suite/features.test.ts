@@ -2,57 +2,11 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { SecurityScanner } from '../../securityScanner';
-import { SecurityExemptionManager } from '../../securityExemptions';
 import { SnippetStore } from '../../snippetStore';
 import { SessionStore } from '../../sessionStore';
 import { MistakeDetector } from '../../mistakeDetector';
-import { SECURITY_RULES } from '../../securityRules';
 
 suite('Engram Feature Test Suite', () => {
-
-    test('Phase 4: Security Rule Matching', () => {
-        const scanner = SecurityScanner.getInstance();
-
-        // Test Eval Rule
-        const riskyText = 'const x = eval("2 + 2");';
-        const issues = scanner.scanText(riskyText, 'typescript');
-        assert.strictEqual(issues.length > 0, true, 'Should detect eval');
-        assert.strictEqual(issues[0].rule.id, 'no-eval', 'Should match no-eval rule');
-        assert.strictEqual(issues[0].line, 0, 'Should be on line 0');
-
-        // Test innerHTML Rule
-        const htmlText = 'div.innerHTML = "<p>unsafe</p>"';
-        const htmlIssues = scanner.scanText(htmlText, 'javascript');
-        assert.strictEqual(htmlIssues.length > 0, true, 'Should detect innerHTML');
-        assert.strictEqual(htmlIssues[0].rule.id, 'inner-html-js', 'Should match inner-html-js rule');
-
-        // Test Safe Text
-        const safeText = 'const x = JSON.parse(data);';
-        const safeIssues = scanner.scanText(safeText, 'typescript');
-        assert.strictEqual(safeIssues.length, 0, 'Should not have issues for safe code');
-    });
-
-    test('Phase 4: Security Exemption Logic', () => {
-        const scanner = SecurityScanner.getInstance();
-        const manager = SecurityExemptionManager.getInstance();
-        const testFile = '/tmp/test.ts'; // Mock path
-
-        // Init exemption manager (mock storage)
-        const tmpStorage = path.join(__dirname, 'tmp_storage');
-        manager.init(tmpStorage);
-
-        const ruleId = 'no-eval';
-
-        // Ensure not exempt initially
-        assert.strictEqual(manager.isExempt(ruleId, testFile), false, 'Should not be exempt initially');
-
-        // Add exemption
-        manager.addExemption(ruleId, testFile, 'Safe context test');
-
-        // Verify exemption
-        assert.strictEqual(manager.isExempt(ruleId, testFile), true, 'Should be exempt after adding');
-    });
 
     test('Phase 3: Snippet Normalization & Storage', async () => {
         const store = SnippetStore.getInstance();

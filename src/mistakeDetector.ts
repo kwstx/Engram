@@ -32,6 +32,10 @@ export class MistakeDetector {
         return this.fingerprints.get(id);
     }
 
+    public getAllFingerprints(): MistakeFingerprint[] {
+        return Array.from(this.fingerprints.values());
+    }
+
     public init(storagePath: string) {
         if (this.initialized) return;
         this.storagePath = storagePath;
