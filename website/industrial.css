@@ -1,0 +1,347 @@
+/* Machine Age Modernism Theme - PIXEL PERFECT v2 */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Space+Mono:wght@400;700&family=UnifrakturMaguntia&family=Inter:wght@400;700;900&display=swap');
+
+:root {
+    --bg-color: #FDFCE9;
+    /* Precise Cream Color */
+    --ink-color: #000000;
+    --font-serif: 'Playfair Display', serif;
+    --font-mono: 'Space Mono', monospace;
+    --font-gothic: 'UnifrakturMaguntia', cursive;
+    --font-sans: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--ink-color);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    /* No scrolling */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-mono);
+}
+
+/* MAIN ARTBOARD CONTAINER - Scales to fit screen */
+.artboard {
+    width: 95vw;
+    height: 90vh;
+    max-width: 1800px;
+    display: grid;
+    grid-template-columns: 280px 300px 1fr 350px;
+    /* Issue | Open Src | Main Title Sprawl | Sidebar */
+    grid-template-rows: auto 1fr auto auto;
+    column-gap: 2rem;
+    row-gap: 1rem;
+    position: relative;
+    /* Debug Grid */
+    /* border: 1px dashed red; */
+}
+
+/* --- ROW 1: HEADER HEADERS --- */
+
+.header-col-1 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.header-col-2 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.header-col-3 {
+    /* [ U.S.A. ] */
+    grid-column: 4;
+    grid-row: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.bullet {
+    font-weight: 700;
+}
+
+.label-bold {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    letter-spacing: -0.05em;
+}
+
+.label-desc {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    line-height: 1.4;
+    font-weight: 700;
+    max-width: 250px;
+}
+
+.usa-bracket {
+    font-family: var(--font-mono);
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+}
+
+.gothic-a {
+    font-family: var(--font-gothic);
+    font-size: 6rem;
+    line-height: 0.8;
+}
+
+/* --- ROW 2: MAIN TITLE (Spanning) --- */
+.main-title-area {
+    grid-column: 1 / 4;
+    /* Span first 3 cols */
+    grid-row: 2 / 4;
+    /* Takes up middle space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 2rem;
+}
+
+.title-line {
+    font-family: var(--font-serif);
+    font-size: clamp(4rem, 11vw, 13rem);
+    /* Responsive massive text */
+    line-height: 0.85;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+}
+
+.title-line-1 {
+    margin-bottom: 0.5rem;
+}
+
+.title-line-2 {
+    display: flex;
+    align-items: center;
+}
+
+/* Hexagon Badge R */
+.badge-r {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 3.5rem;
+    width: 90px;
+    height: 90px;
+    border: 6px solid var(--ink-color);
+    border-radius: 16px;
+    /* Soft octagonal look */
+    margin-left: 2rem;
+    transform: translateY(-0.1em);
+}
+
+/* --- ROW 2: RIGHT SIDEBAR CONTENT --- */
+.sidebar-content {
+    grid-column: 4;
+    grid-row: 2;
+    padding-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    /* Align to right of the column */
+}
+
+.manual-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    /* width: 100%; removed to allow flex-end alignment */
+}
+
+.manual-row {
+    display: flex;
+    align-items: flex-start;
+    /* justify-content removed to allowing bullets to align left */
+    gap: 1.5rem;
+    /* Revert to standard gap */
+}
+
+.bullet {
+    font-weight: 700;
+}
+
+.hidden {
+    opacity: 0;
+}
+
+.manual-line {
+    font-size: 2.5rem;
+    /* A notch smaller */
+    text-transform: uppercase;
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    /* margin-left removed */
+    white-space: nowrap;
+    /* Prevent wrapping */
+}
+
+.continuous-op {
+    font-size: 0.9rem;
+    /* Reduced to sub-text size */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: auto;
+    width: 100%;
+    text-align: left;
+    padding-left: 2rem;
+    /* Indent to match text start? */
+    /* Actually visually it aligns with 'FIELD' */
+    padding-left: calc(1.5rem + 1ch);
+    /* Approx indent */
+}
+
+/* --- ROW 3: SUB LABELS (Small text above black bars) --- */
+.sub-label-row {
+    grid-column: 1 / 4;
+    grid-row: 3;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2rem;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+/* --- ROW 3/4: SYMBOLS & 0-1 (Bottom Right) --- */
+.symbols-area {
+    grid-column: 4;
+    grid-row: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.big-number-area {
+    grid-column: 4;
+    grid-row: 4;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.big-0-1 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    /* Inter Bold is very uniform */
+    font-size: 9rem;
+    line-height: 0.8;
+}
+
+/* SYMBOLS */
+.rect-symbol {
+    width: 25px;
+    height: 50px;
+    background: black;
+    border-radius: 2px;
+}
+
+.nyc-vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+}
+
+.diamond-symbol {
+    width: 60px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 50% / 100%;
+    /* Eye shape */
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* --- ROW 4: BLACK FOOTER BLOCKS --- */
+.footer-blocks {
+    grid-column: 1 / 4;
+    grid-row: 4;
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 4rem;
+    /* Move lower as requested */
+}
+
+.black-box {
+    background: black;
+    color: var(--bg-color);
+    padding: 1rem 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100px;
+    border-radius: 4px;
+    /* Slight roundness */
+}
+
+.box-label {
+    opacity: 0.7;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.box-val {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* FLag SVG */
+.flag-svg {
+    width: 30px;
+    height: auto;
+}
+
+/* Zero fix */
+.slashed-zero {
+    font-variant-numeric: slashed-zero;
+}
+
+@media (max-width: 1000px) {
+
+    /* Fallback for smaller screens to ensure non-breaking */
+    .title-line {
+        font-size: 10vw;
+    }
+
+    .gothic-a {
+        font-size: 4rem;
+    }
+
+    .big-0-1 {
+        font-size: 6rem;
+    }
+}

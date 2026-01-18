@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity + Engram: Learning in Action</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --term-bg: #111;
+            --term-text: #0f0;
+            --ui-bg: #1a1a1a;
+            --accent: #FF4400;
+            /* Engram Orange */
+            --antigravity: #00CCEE;
+            /* Antigravity Blue */
+            --text: #e0e0e0;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: var(--ui-bg);
+            border-right: 1px solid #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #888;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .memory-bank {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .memory-card {
+            background: #222;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 4px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.5s ease;
+        }
+
+        .memory-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .memory-card.new {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(255, 68, 0, 0.3);
+        }
+
+        .memory-title {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .memory-body {
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .terminal {
+            flex: 1;
+            background: var(--term-bg);
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 20px;
+            font-family: 'Consolas', monospace;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            color: #aaa;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .log-line {
+            margin: 5px 0;
+            opacity: 0;
+            animation: fadeIn 0.2s forwards;
+        }
+
+        .log-line.obs {
+            color: #f0f;
+        }
+
+        /* Observation */
+        .log-line.act {
+            color: var(--antigravity);
+            font-weight: bold;
+        }
+
+        /* Antigravity Action */
+        .log-line.sys {
+            color: #4488ff;
+        }
+
+        /* System */
+        .log-line.user {
+            color: #fff;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .status-bar {
+            height: 30px;
+            background: #222;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 11px;
+            color: #666;
+            justify-content: space-between;
+            border-radius: 4px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #333;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .status-dot.active {
+            background: #0f0;
+            box-shadow: 0 0 5px #0f0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>Engram Memory</h2>
+        <div class="memory-bank" id="memoryBank">
+            <!-- Cards will appear here -->
+            <div class="memory-card visible" style="opacity: 0.5;">
+                <div class="memory-title">fix_network_timeouts.md</div>
+                <div class="memory-body">Use networkClient.safeRequest...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="status-bar">
+            <div><span class="status-dot active"></span> AGENT: ANTIGRAVITY (CONNECTED TO MCP)</div>
+            <div>PORT: 3000</div>
+        </div>
+        <div class="terminal" id="terminal"></div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const memoryBank = document.getElementById('memoryBank');
+
+        function log(text, type = 'sys') {
+            const div = document.createElement('div');
+            div.className = `log-line ${type}`;
+            div.textContent = `> ${text}`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function addMemory(title, content) {
+            const card = document.createElement('div');
+            card.className = 'memory-card new';
+            card.innerHTML = `
+            <div class="memory-title">${title}</div>
+            <div class="memory-body">${content}</div>
+        `;
+            memoryBank.appendChild(card);
+            // Trigger reflow
+            void card.offsetWidth;
+            card.classList.add('visible');
+        }
+
+        const script = [
+            { t: 500, text: "Initializing Antigravity Agent...", type: 'sys' },
+            { t: 1000, text: "Antigravity connecting to Engram Memory...", type: 'sys' },
+            { t: 1500, text: "--- ANTIGRAVITY MONITORING ---", type: 'sys' },
+            { t: 2500, text: "User input: const result = eval(userData);", type: 'user' },
+            { t: 3500, text: "⚠️  Antigravity detected dangerous pattern ('eval').", type: 'obs' },
+            { t: 4500, text: "Antigravity Thinking: This is unsafe. I'll save a rule.", type: 'obs' },
+            { t: 5500, text: "executing: engram_save_rule({ title: 'No Eval' })", type: 'act' },
+            { t: 6000, fn: () => addMemory("no_eval_allowed.md", "Problem: eval() is unsafe.\nSolution: Use JSON.parse().") },
+            { t: 6500, text: "✅ Antigravity Saved Rule.", type: 'sys' },
+            { t: 8000, text: "--- 2 HOURS LATER ---", type: 'sys' },
+            { t: 9000, text: "User input: I want to eval this string...", type: 'user' },
+            { t: 10000, text: "Antigravity Thinking: Checking Engram for context...", type: 'obs' },
+            { t: 10500, text: "executing: engram_query('eval')", type: 'act' },
+            { t: 11500, text: "🔍 ANTIGRAVITY RECALL: found 'no_eval_allowed.md'", type: 'act' },
+            { t: 12500, text: "INTERVENTION: 'Do not use eval()! It is unsafe.'", type: 'act' },
+            { t: 13500, text: "result: Antigravity prevented the bug.", type: 'sys' }
+        ];
+
+        let start = Date.now();
+
+        script.forEach(step => {
+            setTimeout(() => {
+                if (step.text) log(step.text, step.type);
+                if (step.fn) step.fn();
+            }, step.t);
+        });
+
+    </script>
+</body>
+
+</html>

@@ -45,6 +45,32 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     }
 
+    // --- MCP SERVER AUTO-CONFIG ---
+    try {
+        const config = vscode.workspace.getConfiguration('amp');
+        const mcpServers = config.get<any>('mcpServers') || {};
+
+        if (!mcpServers['engram']) {
+            const serverPath = context.asAbsolutePath(path.join('server', 'build', 'index.js'));
+
+            logger.log(`Auto-configuring Engram MCP Server at: ${serverPath}`);
+
+            await config.update('mcpServers', {
+                ...mcpServers,
+                "engram": {
+                    "command": "node",
+                    "args": [serverPath],
+                    "disabled": false,
+                    "autoAllow": true
+                }
+            }, vscode.ConfigurationTarget.Global);
+
+            vscode.window.showInformationMessage("Engram MCP Server connected for Universal Protection. 🛡️");
+        }
+    } catch (e) {
+        logger.log(`Failed to auto-configure MCP server: ${e}`);
+    }
+
     // Start Mistake Detection
     const detector = MistakeDetector.getInstance();
     if (context.storageUri) {

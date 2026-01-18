@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engram Demo Simulation</title>
+    <style>
+        :root {
+            --bg-dark: #1e1e1e;
+            --bg-darker: #181818;
+            --text-color: #d4d4d4;
+            --keyword: #569cd6;
+            --function: #dcdcaa;
+            --string: #ce9178;
+            --comment: #6a9955;
+            --cursor: #aeafad;
+            --engram-highlight: rgba(255, 204, 0, 0.2);
+            --engram-border: #ffcc00;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-dark);
+            color: var(--text-color);
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--bg-darker);
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+        }
+
+        .file-item {
+            padding: 5px 20px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-item.active {
+            background: #37373d;
+        }
+
+        .file-icon {
+            width: 14px;
+            text-align: center;
+        }
+
+        .editor {
+            flex-grow: 1;
+            padding: 20px;
+            position: relative;
+        }
+
+        .tab-bar {
+            background: #2d2d2d;
+            height: 35px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tab {
+            background: #1e1e1e;
+            padding: 8px 15px;
+            border-top: 2px solid var(--engram-border);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-area {
+            padding-top: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            white-space: pre;
+            position: relative;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 18px;
+            background: var(--cursor);
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        .line-num {
+            color: #858585;
+            margin-right: 15px;
+            display: inline-block;
+            width: 30px;
+            text-align: right;
+            user-select: none;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Syntax Highlighting Classes */
+        .k {
+            color: var(--keyword);
+        }
+
+        .f {
+            color: var(--function);
+        }
+
+        .s {
+            color: var(--string);
+        }
+
+        .c {
+            color: var(--comment);
+        }
+
+        /* Engram UI */
+        .engram-widget {
+            position: absolute;
+            left: 60px;
+            top: 80px;
+            background: #252526;
+            border: 1px solid #454545;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+            width: 400px;
+            padding: 0;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .engram-widget.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .engram-header {
+            background: #333;
+            padding: 6px 10px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #454545;
+        }
+
+        .engram-badge {
+            font-weight: bold;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .engram-body {
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        .warning-text {
+            color: #ffaace;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .fix-preview {
+            background: #111;
+            padding: 8px;
+            border-radius: 3px;
+            font-family: monospace;
+            border-left: 3px solid var(--comment);
+            color: var(--comment);
+            margin-bottom: 10px;
+        }
+
+        .btn-fix {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .inline-squiggle {
+            border-bottom: 2px dotted #ffcc00;
+            background: rgba(255, 200, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">Explorer</div>
+        <div class="file-item active">
+            <span class="file-icon">📄</span> script.js
+        </div>
+        <div class="file-item">
+            <span class="file-icon">📄</span> api.js
+        </div>
+    </div>
+
+    <div style="flex-grow: 1; display: flex; flex-direction: column;">
+        <div class="tab-bar">
+            <div class="tab">
+                <span class="file-icon" style="color: #f7df1e;">JS</span> script.js <span
+                    style="margin-left:8px; font-size:10px;">✕</span>
+            </div>
+        </div>
+        <div class="editor">
+            <div class="code-area" id="code">
+                <span class="line-num">1</span> <span class="c">// Fetch user profile data</span><br>
+                <span class="line-num">2</span> <span class="k">async function</span> <span class="f">getUser</span>(id)
+                {<br>
+                <span class="line-num">3</span> <span id="typing-area"></span><span class="cursor"></span><br>
+                <span class="line-num">4</span> }
+            </div>
+
+            <!-- Engram Widget -->
+            <div class="engram-widget" id="widget">
+                <div class="engram-header">
+                    <span class="engram-badge">⚡ Engram Recall</span>
+                    <span style="font-size: 10px; opacity: 0.7;">Context Match: 98%</span>
+                </div>
+                <div class="engram-body">
+                    <span class="warning-text">⚠️ <strong>Pattern Warning:</strong> Raw `fetch` usage is
+                        deprecated.</span>
+                    <div class="fix-preview">
+                        - await fetch(...)<br>
+                        + await networkClient.safeRequest(...)
+                    </div>
+                    <button class="btn-fix">Apply Fix (⌘.)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const typingArea = document.getElementById('typing-area');
+        const widget = document.getElementById('widget');
+
+        const badCode = 'const res = await fetch("/api/user");';
+        const goodCode = 'const res = await networkClient.safeRequest("/api/user");';
+
+        function typeText(text, element, speed = 50) {
+            return new Promise(resolve => {
+                let i = 0;
+                function step() {
+                    if (i < text.length) {
+                        // Simple syntax coloring for sim
+                        let char = text.charAt(i);
+                        let html = char;
+                        if (text.substring(i).startsWith('const')) { html = '<span class="k">const</span> '; i += 5; }
+                        else if (text.substring(i).startsWith('await')) { html = '<span class="k">await</span> '; i += 5; }
+                        else if (text.substring(i).startsWith('fetch')) { html = '<span class="f" id="fetch-word">fetch</span>'; i += 4; }
+                        else if (char === '"') {
+                            let end = text.indexOf('"', i + 1);
+                            html = '<span class="s">' + text.substring(i, end + 1) + '</span>';
+                            i = end;
+                        }
+
+                        element.innerHTML += html;
+                        i++;
+                        setTimeout(step, speed + (Math.random() * 50));
+                    } else {
+                        resolve();
+                    }
+                }
+                step();
+            });
+        }
+
+        async function runDemo() {
+            await new Promise(r => setTimeout(r, 1000)); // Initial pause
+
+            // 1. Type bad code
+            await typeText(badCode, typingArea, 80);
+
+            await new Promise(r => setTimeout(r, 600)); // Pause after typing
+
+            // 2. Trigger Warning (Squiggle)
+            const fetchWord = document.getElementById('fetch-word');
+            if (fetchWord) fetchWord.classList.add('inline-squiggle');
+
+            await new Promise(r => setTimeout(r, 500));
+
+            // 3. Show Widget
+            widget.classList.add('visible');
+
+            await new Promise(r => setTimeout(r, 2000)); // Read time
+
+            // 4. Apply Fix
+            // Clear line and re-type good code super fast
+            typingArea.innerHTML = '';
+            widget.classList.remove('visible');
+
+            // Insert good code instantly (simulating auto-replace)
+            typingArea.innerHTML = '<span class="k">const</span> res = <span class="k">await</span> <span class="f">networkClient</span>.<span class="f">safeRequest</span>(<span class="s">"/api/user"</span>);';
+
+            // Flash green or something? maybe subtle
+            typingArea.style.backgroundColor = '#1e301e';
+            setTimeout(() => typingArea.style.backgroundColor = 'transparent', 500);
+
+            // 5. Done
+        }
+
+        runDemo();
+    </script>
+</body>
+
+</html>
