@@ -51,7 +51,7 @@ export async function activate(context: vscode.ExtensionContext) {
         const mcpServers = config.get<any>('mcpServers') || {};
 
         if (!mcpServers['engram']) {
-            const serverPath = context.asAbsolutePath(path.join('server', 'build', 'index.js'));
+            const serverPath = context.asAbsolutePath(path.join('server', 'dist', 'index.js'));
 
             logger.log(`Auto-configuring Engram MCP Server at: ${serverPath}`);
 

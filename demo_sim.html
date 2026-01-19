@@ -32,8 +32,6 @@
 
         .sidebar {
             width: 250px;
-            background: var(--bg-darker);
-            border-right: 1px solid #333;
             display: flex;
             flex-direction: column;
         }
@@ -219,10 +217,18 @@
     <div class="sidebar">
         <div class="sidebar-header">Explorer</div>
         <div class="file-item active">
-            <span class="file-icon">📄</span> script.js
+            <span class="file-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg></span> script.js
         </div>
         <div class="file-item">
-            <span class="file-icon">📄</span> api.js
+            <span class="file-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg></span> api.js
         </div>
     </div>
 
@@ -245,11 +251,22 @@
             <!-- Engram Widget -->
             <div class="engram-widget" id="widget">
                 <div class="engram-header">
-                    <span class="engram-badge">⚡ Engram Recall</span>
+                    <span class="engram-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"
+                            stroke="none">
+                            <path d="M13 2L3 14h9v8l10-12h-9l9-8z" />
+                        </svg> Engram Recall</span>
                     <span style="font-size: 10px; opacity: 0.7;">Context Match: 98%</span>
                 </div>
                 <div class="engram-body">
-                    <span class="warning-text">⚠️ <strong>Pattern Warning:</strong> Raw `fetch` usage is
+                    <span class="warning-text"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="vertical-align: text-bottom;">
+                            <path
+                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                            </path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg> <strong>Pattern Warning:</strong> Raw `fetch` usage is
                         deprecated.</span>
                     <div class="fix-preview">
                         - await fetch(...)<br>

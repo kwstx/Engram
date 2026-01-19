@@ -3,7 +3,7 @@
   "displayName": "Engram",
   "description": "The gateway to code memory. A privacy-first VS Code extension that indexes your prompt history and prevents repeated mistakes.",
   "readme": "README.md",
-  "version": "1.1.5",
+  "version": "1.7.0",
   "publisher": "use-engram",
   "icon": "images/icon.png",
   "engines": {
@@ -63,6 +63,21 @@
           ],
           "default": "breeze",
           "description": "Controls how often Engram warns you. 'Breeze' is quiet (3+ mistakes), 'Strict' is aggressive (2+ mistakes)."
+        },
+        "engram.experimental.hypeMan": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable 'Parasocial Hype Man' (Beta): Receive enthusiastic compliments while waiting for AI generation."
+        },
+        "engram.experimental.gladiatorMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable 'Gladiator Arena' (Beta): Spawn two models to debate the solution."
+        },
+        "engram.experimental.secondaryModel": {
+          "type": "string",
+          "default": "qwen2.5:0.5b",
+          "description": "Model used for Hype Man and Gladiator Challenger."
         }
       }
     }
