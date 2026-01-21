@@ -20,15 +20,8 @@ export class LabsController {
 
 
 
-    public isPredictiveIntuitionEnabled(): boolean {
-        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.predictiveIntuition', false);
-    }
 
 
-
-    public getIntuitionDelay(): number {
-        return vscode.workspace.getConfiguration('engram').get<number>('experimental.intuitionDelay', 1200);
-    }
 
     public isPhotographicMemoryEnabled(): boolean {
         return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.photographicMemory', false);

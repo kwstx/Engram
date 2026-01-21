@@ -1,29 +1,34 @@
 
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import { ShadowIntuition } from '../../experimental/IntuitionService';
-import { LabsController } from '../../experimental/LabsController';
+import { ShadowIntuition } from '../../features/IntuitionService';
 
 suite('Predictive Intuition 2.0 (Native API) Test Suite', () => {
     let originalFetch: any;
+    let originalGetConfiguration: any;
 
     setup(() => {
         // Mock Fetch globally
         originalFetch = global.fetch;
+        originalGetConfiguration = vscode.workspace.getConfiguration;
     });
 
     teardown(() => {
         global.fetch = originalFetch;
+        vscode.workspace.getConfiguration = originalGetConfiguration;
     });
 
     test('Should respect Dynamic Delay configuration', async () => {
-        // Mock Controller to return custom delay
-        const mockController = {
-            isPredictiveIntuitionEnabled: () => true,
-            getIntuitionDelay: () => 50, // Fast for test
-
-        } as LabsController;
-        LabsController.setInstance(mockController);
+        // Mock Configuration
+        const mockConfig = {
+            get: (key: string, defaultValue: any) => {
+                if (key === 'predictiveIntuition') return true;
+                if (key === 'intuitionDelay') return 50;
+                return defaultValue;
+            },
+            update: () => Promise.resolve()
+        };
+        (vscode.workspace.getConfiguration as any) = () => mockConfig;
 
         const service = ShadowIntuition.getInstance();
 
@@ -51,16 +56,18 @@ suite('Predictive Intuition 2.0 (Native API) Test Suite', () => {
 
         const duration = Date.now() - start;
         assert.ok(duration >= 50, 'Should wait at least the configured delay time');
-        // We accept some overhead, but it shouldn't be instant if delay is 50ms
     });
 
     test('FIM: Should include Suffix in prompt', async () => {
-        const mockController = {
-            isPredictiveIntuitionEnabled: () => true,
-            getIntuitionDelay: () => 0,
-
-        } as LabsController;
-        LabsController.setInstance(mockController);
+        const mockConfig = {
+            get: (key: string, defaultValue: any) => {
+                if (key === 'predictiveIntuition') return true;
+                if (key === 'intuitionDelay') return 0;
+                return defaultValue;
+            },
+            update: () => Promise.resolve()
+        };
+        (vscode.workspace.getConfiguration as any) = () => mockConfig;
 
         const service = ShadowIntuition.getInstance();
 
@@ -92,12 +99,15 @@ suite('Predictive Intuition 2.0 (Native API) Test Suite', () => {
     });
 
     test('Prompt Director: Should detect comments', async () => {
-        const mockController = {
-            isPredictiveIntuitionEnabled: () => true,
-            getIntuitionDelay: () => 0,
-
-        } as LabsController;
-        LabsController.setInstance(mockController);
+        const mockConfig = {
+            get: (key: string, defaultValue: any) => {
+                if (key === 'predictiveIntuition') return true;
+                if (key === 'intuitionDelay') return 0;
+                return defaultValue;
+            },
+            update: () => Promise.resolve()
+        };
+        (vscode.workspace.getConfiguration as any) = () => mockConfig;
 
         const service = ShadowIntuition.getInstance();
 
@@ -126,12 +136,15 @@ suite('Predictive Intuition 2.0 (Native API) Test Suite', () => {
     });
 
     test('Robustness: Should abort on cancellation', async () => {
-        const mockController = {
-            isPredictiveIntuitionEnabled: () => true,
-            getIntuitionDelay: () => 100, // Long enough to cancel
-
-        } as LabsController;
-        LabsController.setInstance(mockController);
+        const mockConfig = {
+            get: (key: string, defaultValue: any) => {
+                if (key === 'predictiveIntuition') return true;
+                if (key === 'intuitionDelay') return 100;
+                return defaultValue;
+            },
+            update: () => Promise.resolve()
+        };
+        (vscode.workspace.getConfiguration as any) = () => mockConfig;
 
         const service = ShadowIntuition.getInstance();
         const tokenSource = new vscode.CancellationTokenSource();

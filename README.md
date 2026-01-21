@@ -33,10 +33,16 @@ A firewall for AI-generated code.
 *   **Active Warning System**: Detects when you are about to repeat a known bad pattern.
 *   **Memory Cards**: Hover over any warning to see exactly when this mistake happened before and how you fixed it.
 
-## Quick Start
+### Predictive Intuition (Auto-Enabled)
+It reads your mind.
+*   **Ghost Text**: Shows predictions when you hesitate.
+*   **Prompt Director**: Knows when you want to ask a question.
+*   **Telepathy**: Broadcasts its thoughts to `.engram/intuition.md` so other AI agents can read them.
 
+## Quick Start
 1.  **Install** the extension.
 2.  **Code** as usual. Engram learns quietly in the background.
+3.  **Watch** for ghost text warnings or predictions.
 3.  **Paste** smarter. Use "Engram: Smart Copy" when asking AI for help.
 4.  **Refine**. Use the blue "Shadow Guard" warnings to tune your rules.
 
@@ -65,13 +71,9 @@ Engram is designed to be hacked.
 ## Experimental Features (Beta)
 **Engram isn't just a memory; it's a psychic companion.**
 
-### Predictive Intuition (Auto-Enabled)
-Engram uses local models (Ollama) to predict your next move.
-*   **What it does:** Shows ghost-text predictions when you hesitate.
-*   **How to Disable:** Go to **Settings** -> Search `Engram` -> Uncheck `Experimental: Predictive Intuition`.
+*Note: Pre-Cog (Intuition) is now a core feature! Check the Quick Start.*
 
-### Opt-In Duel
-*   **What it does:** Adds a "Challenge" button to code blocks. Click it to summon a second AI model to critique your code.
-*   **How to Disable:** Go to **Settings** -> Uncheck `Experimental: Opt In Duel`.
+### Photographic Memory & Hippocampus (Hidden Beta)
+See `walkthrough.md` for instructions on how to enable these classified features.
 
 *   [Privacy Policy](https://www.useengram.com/privacy.html)

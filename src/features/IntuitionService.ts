@@ -1,16 +1,21 @@
 
 import * as vscode from 'vscode';
-import { LabsController } from './LabsController';
 import { OllamaService } from '../llm';
 
 export class ShadowIntuition implements vscode.InlineCompletionItemProvider {
     private static instance: ShadowIntuition;
     private lastBroadcastContent: string | null = null; // Caching for deduplication
+    private statusBarItem: vscode.StatusBarItem;
 
     // Dynamic Physics (Defaults)
-    private readonly DEBOUNCE_TIME = 1200;
+    private readonly DEFAULT_DELAY = 1200;
 
-    private constructor() { }
+    private constructor() {
+        // Initialize Status Bar
+        this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+        this.statusBarItem.command = 'engram.toggleIntuition';
+        this.updateStatusBar();
+    }
 
     public static getInstance(): ShadowIntuition {
         if (!ShadowIntuition.instance) {
@@ -25,7 +30,71 @@ export class ShadowIntuition implements vscode.InlineCompletionItemProvider {
             { pattern: '**' }, // All files
             this
         );
-        context.subscriptions.push(provider);
+
+        // Register Toggle Command
+        const toggleCommand = vscode.commands.registerCommand('engram.toggleIntuition', async () => {
+            const config = vscode.workspace.getConfiguration('engram');
+            const currentValue = config.get<boolean>('predictiveIntuition', true);
+
+            // Quick Pick Menu
+            const selection = await vscode.window.showQuickPick([
+                { label: currentValue ? '$(circle-filled) Disable Intuition' : '$(circle-outline) Enable Intuition', description: 'Toggle AI ghost text' },
+                { label: '$(settings) Adjust Delay', description: `Current: ${config.get('intuitionDelay')}ms` },
+                { label: '$(output) View Telepathy Log', description: 'Show what the AI is thinking' }
+            ], { placeHolder: 'Manage Predictive Intuition (Pre-Cog)' });
+
+            if (!selection) return;
+
+            if (selection.label.includes('Disable') || selection.label.includes('Enable')) {
+                await config.update('predictiveIntuition', !currentValue, vscode.ConfigurationTarget.Global);
+                this.updateStatusBar();
+            } else if (selection.label.includes('Adjust Delay')) {
+                const input = await vscode.window.showInputBox({
+                    prompt: 'Enter delay in milliseconds (e.g. 1200)',
+                    value: String(config.get('intuitionDelay'))
+                });
+                if (input && !isNaN(Number(input))) {
+                    await config.update('intuitionDelay', Number(input), vscode.ConfigurationTarget.Global);
+                }
+            } else if (selection.label.includes('View Telepathy Log')) {
+                this.openTelepathyLog();
+            }
+        });
+
+        // Listen for config changes to update status bar
+        const configListener = vscode.workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration('engram.predictiveIntuition')) {
+                this.updateStatusBar();
+            }
+        });
+
+        context.subscriptions.push(provider, toggleCommand, this.statusBarItem, configListener);
+        this.statusBarItem.show();
+    }
+
+    private updateStatusBar() {
+        const config = vscode.workspace.getConfiguration('engram');
+        const enabled = config.get<boolean>('predictiveIntuition', true);
+        if (enabled) {
+            this.statusBarItem.text = '$(telescope) Intuition: On';
+            this.statusBarItem.tooltip = 'Predictive Intuition is Active (Click to configure)';
+            this.statusBarItem.backgroundColor = undefined;
+        } else {
+            this.statusBarItem.text = '$(telescope) Intuition: Off';
+            this.statusBarItem.tooltip = 'Predictive Intuition is Disabled';
+            this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+        }
+    }
+
+    private async openTelepathyLog() {
+        if (!vscode.workspace.workspaceFolders) return;
+        const uri = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, '.engram', 'intuition.md');
+        try {
+            const doc = await vscode.workspace.openTextDocument(uri);
+            await vscode.window.showTextDocument(doc);
+        } catch (e) {
+            vscode.window.showInformationMessage("No Telepathy Log found yet. Start typing!");
+        }
     }
 
     // Native API Method
@@ -37,23 +106,18 @@ export class ShadowIntuition implements vscode.InlineCompletionItemProvider {
     ): Promise<vscode.InlineCompletionItem[] | vscode.InlineCompletionList | null> {
 
         // 1. Feature Flag Check
-        if (!LabsController.getInstance().isPredictiveIntuitionEnabled()) {
+        const config = vscode.workspace.getConfiguration('engram');
+        if (!config.get<boolean>('predictiveIntuition', true)) {
             return null;
         }
 
-        // 2. Debounce (Implicitly handled by VS Code's request cadence, but we want a hard delay)
-        // VS Code calls this frequently. We need to pause.
-        // Actually, inline providers are usually "pull" based. 
-        // To strictly enforce "Wait for silence", we might need a small delay loop here
-        // checking token.isCancellationRequested.
-
-        // Wait 1.2s (or configured time) to verify user stopped typing (Dynamic Physics)
-        const delay = LabsController.getInstance().getIntuitionDelay();
+        // 2. Debounce
+        const delay = config.get<number>('intuitionDelay', this.DEFAULT_DELAY);
         await new Promise(resolve => setTimeout(resolve, delay));
         if (token.isCancellationRequested) return null;
 
 
-        // 3. FIM Context Gathering (Change 2)
+        // 3. FIM Context Gathering
         const offset = document.offsetAt(position);
         const text = document.getText();
 
@@ -61,25 +125,21 @@ export class ShadowIntuition implements vscode.InlineCompletionItemProvider {
         const start = Math.max(0, offset - 2000);
         const prefix = text.substring(start, offset);
 
-        // Suffix: Next 1000 chars (to prevent duplicating closing brackets etc)
+        // Suffix: Next 1000 chars
         const end = Math.min(text.length, offset + 1000);
         const suffix = text.substring(offset, end);
 
-        // 4. Prompt Director (Change 4)
-        // Check for empty line or comment
+        // 4. Prompt Director
         const lineText = document.lineAt(position.line).text.trim();
         const isComment = lineText.startsWith('//');
         const isEmpty = lineText === '';
 
         let isDirecting = false;
         if (isEmpty || isComment) {
-            // Chance to trigger "Director Mode"
-            // We'll let the prompt decide.
             isDirecting = true;
         }
 
         // 5. Construct Prompt
-        // We use a pseudo-FIM prompt for the generic model
         let prompt = `You are a code completion engine.
         Goal: Complete the code at the cursor (between PREFIX and SUFFIX).
         Rules:
@@ -131,6 +191,8 @@ export class ShadowIntuition implements vscode.InlineCompletionItemProvider {
             }
         } catch (e) {
             console.error("Intuition failed:", e);
+            this.statusBarItem.text = '$(warning) Intuition Error';
+            this.statusBarItem.tooltip = 'Check if Ollama is running.';
         }
 
         this.clearBroadcast();
@@ -149,7 +211,8 @@ export class ShadowIntuition implements vscode.InlineCompletionItemProvider {
 > **Timestamp:** ${new Date().toISOString()}
 > **File:** ${vscode.workspace.asRelativePath(document.uri)}
 > **State:** 🔮 PREDICTING
-> **Stop Me:** Ask your AI agent to set \`"engram.experimental.predictiveIntuition": false\` in .vscode/settings.json
+> **Status:** Active (Core Feature)
+> **Disable:** Click 'Intuition: On' in Status Bar
 
 ## Prediction
 \`\`\`typescript

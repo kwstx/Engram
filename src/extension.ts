@@ -15,7 +15,7 @@ import { MemoryCardProvider } from './ui/MemoryCardProvider';
 import { StatusBarController } from './ui/StatusBarController';
 import { LabsController } from './experimental/LabsController';
 
-import { ShadowIntuition } from './experimental/IntuitionService';
+import { ShadowIntuition } from './features/IntuitionService';
 import { PhotographerService } from './experimental/PhotographerService';
 import { flashbackCommand } from './experimental/FlashbackCommand';
 import { HippocampusService } from './experimental/HippocampusService';
@@ -101,17 +101,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
 
 
-    // [LABS] Beta Features - Predictive Intuition
-    if (LabsController.getInstance().isPredictiveIntuitionEnabled()) {
-        const shadowIntuition = ShadowIntuition.getInstance();
-        shadowIntuition.startListening(context);
+    // Core Feature: Predictive Intuition (Pre-Cog)
+    const shadowIntuition = ShadowIntuition.getInstance();
+    shadowIntuition.startListening(context);
 
-
-
-        context.subscriptions.push(
-            vscode.commands.registerCommand('engram.flashback', flashbackCommand)
-        );
-    }
+    context.subscriptions.push(
+        vscode.commands.registerCommand('engram.flashback', flashbackCommand)
+    );
 
     // Initialize Context Injector (AI Whisperer)
     const contextInjector = ContextInjector.getInstance();

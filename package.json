@@ -59,7 +59,7 @@
       {
         "command": "engram.acceptIntuition",
         "key": "ctrl+shift+space",
-        "when": "editorTextFocus && config.engram.experimental.predictiveIntuition"
+        "when": "editorTextFocus && config.engram.predictiveIntuition"
       }
     ],
     "menus": {},
@@ -76,12 +76,12 @@
           "default": "breeze",
           "description": "Controls how often Engram warns you. 'Breeze' is quiet (3+ mistakes), 'Strict' is aggressive (2+ mistakes)."
         },
-        "engram.experimental.predictiveIntuition": {
+        "engram.predictiveIntuition": {
           "type": "boolean",
           "default": true,
-          "description": "Enable 'Predictive Intuition' (Beta): Shows ghost text predictions when you hesitate."
+          "description": "Enable 'Predictive Intuition' (Pre-Cog): AI-ghost text that anticipates your next move."
         },
-        "engram.experimental.intuitionDelay": {
+        "engram.intuitionDelay": {
           "type": "number",
           "default": 1200,
           "description": "Delay (ms) before Intuition triggers. Default: 1200ms."
